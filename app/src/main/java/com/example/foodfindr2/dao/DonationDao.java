@@ -44,4 +44,29 @@ public interface DonationDao {
     @Transaction
     @Query("SELECT * FROM donations")
     LiveData<List<DonationWithItems>> getAllDonationsWithItems();
+
+    //get donation by ID
+    @Query("SELECT * FROM donations WHERE donation_id = :donationId")
+    LiveData<Donation> getDonationById(int donationId);
+
+
+    @Query("UPDATE donations SET status = :status WHERE donation_id = :donationId")
+    void updateDonationStatus(int donationId, String status);
+
+    @Query("SELECT users.username FROM users INNER JOIN donations ON users.id = donations.donor_id WHERE donations.donation_id = :donationId")
+    LiveData<String> getDonorName(int donationId);
+
+    @Query("UPDATE donations SET receiver_id = :receiverId, status = :newStatus WHERE donation_id = :donationId")
+    void updateReceiverAndStatus(int donationId, int receiverId, String newStatus);
+
+    @Query("SELECT * FROM donations WHERE donor_id = :userId")
+    LiveData<List<Donation>> getDonationsByUser(int userId);
+
+
+    @Query("SELECT * FROM donations WHERE receiver_id = :userId")
+    LiveData<List<Donation>> getClaimedDonationsByUser(int userId);
+
+
+
+
 }

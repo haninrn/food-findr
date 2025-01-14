@@ -8,13 +8,16 @@ public class RecommendationItem {
     private double rating;
     private int imageResId;
 
-    public RecommendationItem(String title, String location, String status, String owner, double rating, int imageResId) {
+    private int donationId;
+
+    public RecommendationItem(String title, String location, String status, String owner, double rating, int imageResId, int donationId) {
         this.title = title;
         this.location = location;
         this.status = status;
         this.owner = owner;
         this.rating = rating;
         this.imageResId = imageResId;
+        this.donationId = donationId;
     }
 
     public String getTitle() {
@@ -39,5 +42,9 @@ public class RecommendationItem {
 
     public int getImageResId() {
         return imageResId;
+    }
+
+    public int getDonationId() {
+        return donationId;
     }
 }

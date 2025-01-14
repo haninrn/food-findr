@@ -38,6 +38,8 @@ import java.util.concurrent.Executors;
 public class PostDonationFragment extends Fragment {
 
     private Spinner foodTypeSpinner;
+
+    private Spinner citySpinner;
     private TextInputLayout otherCategoryInputLayout, itemNameInput, quantityInput, addressInput, descriptionInput, pickupInstructionsInput, manufacturingDateInput, expiryDateInput;
     private TextInputEditText itemNameEditText, otherCategoryEditText, quantityEditText, addressEditText, descriptionEditText, pickupInstructionsEditText, manufacturingDateEditText, expiryDateEditText;
     private Button submitButton;
@@ -55,8 +57,14 @@ public class PostDonationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_donation, container, false);
 
+        citySpinner = view.findViewById(R.id.citySpinner);
+
+        // Set up city spinner
+
+
         // Initialize views
         foodTypeSpinner = view.findViewById(R.id.foodTypeSpinner);
+        citySpinner = view.findViewById(R.id.citySpinner);
         otherCategoryInputLayout = view.findViewById(R.id.otherCategoryInputLayout);
         otherCategoryEditText = view.findViewById(R.id.otherCategoryEditText);
         itemNameInput = view.findViewById(R.id.itemNameInput);
@@ -79,6 +87,7 @@ public class PostDonationFragment extends Fragment {
         donationViewModel = new ViewModelProvider(this).get(DonationViewModel.class);
 
         setupFoodTypeSpinner();
+        setupCitySpinner();
         setupDatePickers();
         setupSubmitButton();
 
@@ -104,6 +113,38 @@ public class PostDonationFragment extends Fragment {
             }
         });
     }
+
+    private void setupCitySpinner() {
+        String[] cities = {
+                "Kuala Lumpur", "Selangor", "Johor", "Kelantan", "Kedah",
+                "Melaka", "Negeri Sembilan", "Perlis", "Putrajaya", "Perak"
+        };
+
+        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                cities
+        );
+        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        citySpinner.setAdapter(cityAdapter);
+
+        // Optional: Set a default city selection
+        citySpinner.setSelection(0);
+
+        // Optional: Add a listener for when the user selects a city
+        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCity = cities[position];
+                Toast.makeText(requireContext(), "Selected city: " + selectedCity, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle case when nothing is selected, if needed
+            }
+        });
+        }
 
     private void setupDatePickers() {
         manufacturingDateEditText.setOnClickListener(v -> showDatePickerDialog(manufacturingDateEditText));
@@ -134,6 +175,7 @@ public class PostDonationFragment extends Fragment {
             String itemName = itemNameEditText.getText().toString().trim();
             String quantity = quantityEditText.getText().toString().trim();
             String address = addressEditText.getText().toString().trim();
+            String city = citySpinner.getSelectedItem().toString(); // new city
             String description = descriptionEditText.getText().toString().trim();
             String pickupInstructions = pickupInstructionsEditText.getText().toString().trim();
             String category = foodTypeSpinner.getSelectedItem().toString();
@@ -170,10 +212,12 @@ public class PostDonationFragment extends Fragment {
             }
 
             donation.donor_id = currentUserId;
-            donation.status = "Pending";
+            donation.status = "Available";
             donation.date_posted = new Date();
             donation.description = description;
             donation.pickup_instructions = pickupInstructions;
+            donation.address = address;
+            donation.city = city;
 
             Item item = new Item();
             item.item_name = itemName;

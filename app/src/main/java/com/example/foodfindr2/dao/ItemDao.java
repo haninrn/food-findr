@@ -1,5 +1,6 @@
 package com.example.foodfindr2.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -35,4 +36,12 @@ public interface ItemDao {
     // Get items by category
     @Query("SELECT * FROM items WHERE category = :category")
     List<Item> getItemsByCategory(String category);
+
+    @Query("SELECT item_name FROM items WHERE item_id = :itemId")
+    LiveData<String> getItemNameById(int itemId);
+
+    @Query("SELECT item_name FROM items WHERE donation_id = :donationId")
+    LiveData<String> getItemNameByDonationId(int donationId);
+
+
 }

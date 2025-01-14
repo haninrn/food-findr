@@ -118,6 +118,13 @@
                 android:minLines="3" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- City Dropdown -->
+        <Spinner
+            android:id="@+id/citySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
         <!-- Description Input -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/descriptionInput"

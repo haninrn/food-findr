@@ -38,4 +38,100 @@ public class Donation {
 
     public String description; // Description of the donation
     public String pickup_instructions; // Pickup instructions for the receiver
+
+    public String address; // Address for the specific donation
+    public String city; // City for the specific donation
+
+    // Getters and Setters
+    public int getDonation_id() {
+        return donation_id;
+    }
+
+    public void setDonation_id(int donation_id) {
+        this.donation_id = donation_id;
+    }
+
+    public int getDonor_id() {
+        return donor_id;
+    }
+
+    public void setDonor_id(int donor_id) {
+        this.donor_id = donor_id;
+    }
+
+    @Nullable
+    public Integer getReceiver_id() {
+        return receiver_id;
+    }
+
+    public void setReceiver_id(@Nullable Integer receiver_id) {
+        this.receiver_id = receiver_id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Date getDate_posted() {
+        return date_posted;
+    }
+
+    public void setDate_posted(Date date_posted) {
+        this.date_posted = date_posted;
+    }
+
+    @Nullable
+    public Date getDate_claimed() {
+        return date_claimed;
+    }
+
+    public void setDate_claimed(@Nullable Date date_claimed) {
+        this.date_claimed = date_claimed;
+    }
+
+    @Nullable
+    public Date getDate_completed() {
+        return date_completed;
+    }
+
+    public void setDate_completed(@Nullable Date date_completed) {
+        this.date_completed = date_completed;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getPickup_instructions() {
+        return pickup_instructions;
+    }
+
+    public void setPickup_instructions(String pickup_instructions) {
+        this.pickup_instructions = pickup_instructions;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
 }

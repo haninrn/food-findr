@@ -85,5 +85,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/item_recommendation" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

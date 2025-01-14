@@ -3,25 +3,35 @@ package com.example.foodfindr2.fragments;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodfindr2.R;
 import com.example.foodfindr2.adapter.RecommendationAdapter;
 import com.example.foodfindr2.adapter.RecommendationItem;
+import com.example.foodfindr2.model.Donation;
+import com.example.foodfindr2.model.DonationWithItems;
+import com.example.foodfindr2.model.Item;
+import com.example.foodfindr2.viewmodel.DonationViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 public class HomeFragment extends Fragment {
 
@@ -31,8 +41,10 @@ public class HomeFragment extends Fragment {
     private EditText searchEditText;
     private Button btnType, btnLocation, btnFilter;
 
+    private DonationViewModel donationViewModel;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Initialize views
@@ -42,19 +54,38 @@ public class HomeFragment extends Fragment {
         btnLocation = view.findViewById(R.id.BtnLocation);
         btnFilter = view.findViewById(R.id.BtnFilter);
 
+        // Set up RecyclerView
+        recommendationList = new ArrayList<>();
+        adapter = new RecommendationAdapter(getContext(), recommendationList, item -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("donation_id", item.getDonationId()); // Pass the ID or any relevant data
+
+            // Create a new instance of ClaimDonationFragment and set arguments
+            ClaimDonationFragment claimDonationFragment = new ClaimDonationFragment();
+            claimDonationFragment.setArguments(bundle);
+
+            // Perform the fragment transaction
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, claimDonationFragment) // Replace with your container ID
+                    .addToBackStack(null) // Add to back stack for navigation
+                    .commit();
+        });
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext())); // Attach LayoutManager
+        recyclerView.setAdapter(adapter); // Attach Adapter
+
+        // Initialize ViewModel
+        donationViewModel = new ViewModelProvider(this).get(DonationViewModel.class);
+
+        // Observe LiveData from ViewModel
+        donationViewModel.getAvailableDonations().observe(getViewLifecycleOwner(), this::populateRecommendationList);
+
         // Set up button click listeners
         btnType.setOnClickListener(v -> showFilterDialog("Type"));
         btnLocation.setOnClickListener(v -> showFilterDialog("Location"));
         btnFilter.setOnClickListener(v -> showAdvancedFilter());
-
-        // Initialize recommendation list
-        recommendationList = new ArrayList<>();
-        populateRecommendationList();
-
-        // Set up RecyclerView
-        adapter = new RecommendationAdapter(getContext(), recommendationList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.setAdapter(adapter);
 
         // Search functionality
         searchEditText.addTextChangedListener(new TextWatcher() {
@@ -73,13 +104,38 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    // Populate recommendation list with sample data
-    private void populateRecommendationList() {
-        recommendationList.add(new RecommendationItem("Pack of 6 apples", "Kuala Lumpur", "Available", "Joney", 5.0, R.drawable.apples));
-        recommendationList.add(new RecommendationItem("Pack of 6 apples", "Selangor", "Available", "Adam", 5.0, R.drawable.apples));
-        recommendationList.add(new RecommendationItem("Pack of 6 apples", "Kuala Lumpur", "Claimed", "Yana", 4.9, R.drawable.apples));
-        recommendationList.add(new RecommendationItem("Pack of 12 oranges", "Kuala Lumpur", "Available", "Sarah", 4.8, R.drawable.apples));
+    // Populate RecyclerView with donations
+    private void populateRecommendationList(List<DonationWithItems> donationWithItemsList) {
+        List<RecommendationItem> recommendations = new ArrayList<>();
+        for (DonationWithItems donationWithItems : donationWithItemsList) {
+            Donation donation = donationWithItems.donation;
+            Log.d("HomeFragment", "Donation ID: " + donation.donation_id);
+            Log.d("HomeFragment", "Description: " + donation.description);
+            Log.d("HomeFragment", "Status: " + donation.status);
+            for (Item item : donationWithItems.items) {
+                Log.d("HomeFragment", "Item Name: " + item.item_name);
+                Log.d("HomeFragment", "Category: " + item.category);
+                recommendations.add(new RecommendationItem(
+                        item.item_name,
+                        donation.city,
+                        donation.status,
+                        "Owner Name", // Replace with the actual owner's name if available
+                        5.0, // Replace with actual rating if applicable
+                        R.drawable.apples, // Replace with actual image
+                        donation.getDonation_id()
+                ));
+            }
+        }
+        adapter.updateList(recommendations);
     }
+
+    public void onRecommendationClick(int donationId) {
+        // Navigate to the DonationDetailFragment
+        Bundle bundle = new Bundle();
+        bundle.putInt("donation_id", donationId);
+        Navigation.findNavController(requireView()).navigate(R.id.action_homeFragment_to_donationDetailFragment, bundle);
+    }
+
 
     // Filter RecyclerView by search query
     private void filterRecyclerView(String query) {

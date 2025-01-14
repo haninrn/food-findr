@@ -29,18 +29,6 @@ public class User {
 
     private byte[] profilePhoto;
 
-    // Constructor
-//    public User(int id, @NonNull String name, @NonNull String email,
-//                @NonNull String password, String phone, String address, byte[] profilePhoto) {
-//        this.id = id;
-//        this.name = name;
-//        this.email = email;
-//        this.password = password;
-//        this.phone = phone;
-//        this.address = address;
-//        this.profilePhoto = profilePhoto;
-//    }
-
     // Getters and Setters
     public int getId() {
         return id;
@@ -55,10 +43,9 @@ public class User {
         return username;
     }
 
-    public void setUsername(@NonNull String name) {
-        this.username = name;
+    public void setUsername(@NonNull String username) {
+        this.username = username;
     }
-
 
     @NonNull
     public String getEmail() {

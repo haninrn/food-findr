@@ -17,11 +17,19 @@ import java.util.List;
 public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAdapter.ViewHolder> {
 
     private List<RecommendationItem> recommendationList;
-    private Context context;
+    private final Context context;
+    private final OnItemClickListener listener;
 
-    public RecommendationAdapter(Context context, List<RecommendationItem> recommendationList) {
+    // Define an interface for item click handling
+    public interface OnItemClickListener {
+        void onRecommendationClick(RecommendationItem item); // Pass the object, not int
+    }
+
+
+    public RecommendationAdapter(Context context, List<RecommendationItem> recommendationList, OnItemClickListener listener) {
         this.context = context;
         this.recommendationList = recommendationList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,20 +43,27 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecommendationItem item = recommendationList.get(position);
 
+        // Bind data to views
         holder.title.setText(item.getTitle());
         holder.location.setText(item.getLocation());
         holder.status.setText(item.getStatus());
         holder.owner.setText(item.getOwner());
         holder.rating.setText(String.valueOf(item.getRating()));
-        holder.imageView.setImageResource(item.getImageResId());
-        holder.imageView.setImageResource(R.drawable.star);
+        holder.appleImageView.setImageResource(item.getImageResId()); // Apple image
 
-        if (item.getStatus().equals("Available")) {
+        // Set status background based on availability
+        if (item.getStatus().equalsIgnoreCase("Available")) {
             holder.status.setBackgroundResource(R.drawable.rounded_background_available);
-        } else if (item.getStatus().equals("Claimed")) {
+        } else if (item.getStatus().equalsIgnoreCase("Claimed")) {
             holder.status.setBackgroundResource(R.drawable.rounded_background);
         }
 
+        // Handle item click
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onRecommendationClick(item); // Pass the item, not an ID
+            }
+        });
 
     }
 
@@ -59,7 +74,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView title, location, status, owner, rating;
-        ImageView imageView;
+        ImageView appleImageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,15 +83,14 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
             status = itemView.findViewById(R.id.TVStatus);
             owner = itemView.findViewById(R.id.TVOwner);
             rating = itemView.findViewById(R.id.TVRating);
-            imageView = itemView.findViewById(R.id.IVApple);
-            imageView = itemView.findViewById(R.id.IVStar);
+            appleImageView = itemView.findViewById(R.id.IVApple); // Apple image
         }
     }
-    public void updateList(List<RecommendationItem> updatedList) {
-        this.recommendationList = updatedList;
-        recommendationList.clear();
-        recommendationList.addAll(updatedList);
-        notifyDataSetChanged();
-    }
 
+    // Update RecyclerView items
+    public void updateList(List<RecommendationItem> updatedList) {
+        recommendationList.clear(); // Clear existing items
+        recommendationList.addAll(updatedList); // Add new items
+        notifyDataSetChanged(); // Notify adapter about data changes
+    }
 }
