@@ -1,0 +1,161 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#49A4FF"
+    tools:context=".FeedbackFragment">
+
+    <!-- 卡片背景 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardFeedbackBackground"
+        android:layout_width="400dp"
+        android:layout_height="752dp"
+        android:layout_margin="16dp"
+        android:elevation="4dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- 内容布局 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <TextView
+                android:id="@+id/TVFeedbackQues1"
+                android:layout_width="287dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:text="What do you think of the food donation?"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TVFeedbackTitle" />
+
+            <TextView
+                android:id="@+id/TVFeedbackQues2"
+                android:layout_width="336dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="36dp"
+                android:text="Do you have any thoughts you’d like to share?"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/RBStar" />
+
+            <TextView
+                android:id="@+id/TVFeedbackTitle"
+                android:layout_width="223dp"
+                android:layout_height="51dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="28dp"
+                android:text="Give feedback"
+                android:textSize="34sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/ETFeedback"
+                android:layout_width="337dp"
+                android:layout_height="211dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rounded_background_white"
+                android:elevation="4dp"
+                android:hint="Tell us what we can improve?"
+                android:padding="12dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TVFeedbackQues2" />
+
+            <RadioButton
+                android:id="@+id/RBNo"
+                android:layout_width="66dp"
+                android:layout_height="49dp"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="8dp"
+                android:text="No"
+                app:layout_constraintStart_toEndOf="@+id/RBYes"
+                app:layout_constraintTop_toBottomOf="@+id/TVFeedbackQues3" />
+
+            <Button
+                android:id="@+id/BtnCancelFeedback"
+                android:layout_width="124dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="64dp"
+                android:backgroundTint="@color/gray"
+                android:text="Cancel"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@+id/BtnSendFeedback"
+                app:layout_constraintTop_toBottomOf="@+id/RBNo" />
+
+            <Button
+                android:id="@+id/BtnSendFeedback"
+                android:layout_width="115dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="64dp"
+                android:backgroundTint="@color/blue"
+                android:text="Send"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/RBNo" />
+
+            <RadioButton
+                android:id="@+id/RBYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:text="Yes"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TVFeedbackQues3" />
+
+            <TextView
+                android:id="@+id/TVFeedbackQues3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="20dp"
+                android:text="May we follow you up on your feedback?"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/ETFeedback" />
+
+            <RatingBar
+                android:id="@+id/RBStar"
+                android:layout_width="241dp"
+                android:layout_height="57dp"
+                android:layout_marginStart="80dp"
+                android:layout_marginTop="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/TVFeedbackQues1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- 文本输入框 -->
+
+        <!-- 是否允许后续联系 -->
+
+        <RadioGroup
+            android:id="@+id/RGFollowUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            >
+
+        </RadioGroup>
+
+        <!-- 按钮 -->
+
+
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

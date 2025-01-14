@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/TVItemTitle"
+        android:layout_width="124dp"
+        android:layout_height="22dp"
+        android:layout_marginStart="92dp"
+        android:layout_marginTop="16dp"
+        android:text="Pack of 6 Apples"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/IVApple"
+        app:layout_constraintTop_toBottomOf="@+id/TVStatus" />
+
+    <TextView
+        android:id="@+id/TVLocation"
+        android:layout_width="89dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="88dp"
+        android:text="Kuala Lumpur"
+        app:layout_constraintStart_toEndOf="@+id/TVRating"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TVStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="112dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_background_available"
+        android:text="Available"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TVOwner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:text="Joney"
+        app:layout_constraintStart_toEndOf="@+id/IVApple"
+        app:layout_constraintTop_toBottomOf="@+id/TVItemTitle" />
+
+    <TextView
+        android:id="@+id/TVRating"
+        android:layout_width="26dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="10dp"
+        android:text="5.0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/IVStar" />
+
+    <ImageView
+        android:id="@+id/IVApple"
+        android:layout_width="72dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/apples" />
+
+    <ImageView
+        android:id="@+id/IVStar"
+        android:layout_width="19dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toEndOf="@+id/TVOwner"
+        app:layout_constraintTop_toBottomOf="@+id/TVItemTitle"
+        app:srcCompat="@drawable/star" />
+
+
+
+
+
+
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

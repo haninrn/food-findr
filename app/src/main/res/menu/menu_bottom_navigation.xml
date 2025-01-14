@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_explore"
+        android:icon="@drawable/explore_icon"
+        android:title="Explore" />
+    <item
+        android:id="@+id/menu_profile"
+        android:icon="@drawable/profile_icon"
+        android:title="Profile" />
+    <item
+        android:id="@+id/menu_add_post"
+        android:icon="@drawable/add_icon"
+        android:title="Add Post" />
+    <item
+        android:id="@+id/menu_notifications"
+        android:icon="@drawable/notifications_icon"
+        android:title="Notifications" />
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/settings_icon"
+        android:title="Settings" />
+</menu>
