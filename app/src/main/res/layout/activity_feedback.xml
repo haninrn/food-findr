@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#49A4FF"
-    tools:context=".FeedbackFragment">
+    tools:context=".activities.FeedbackActivity">
 
     <!-- 卡片背景 -->
     <androidx.cardview.widget.CardView
@@ -67,7 +67,7 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/rounded_background_white"
                 android:elevation="4dp"
-                android:hint="Share your experience with the donor"
+                android:hint="Share your experience with the donor!"
                 android:padding="12dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/TVFeedbackQues2" />

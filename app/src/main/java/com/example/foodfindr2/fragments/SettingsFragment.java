@@ -1,5 +1,6 @@
 package com.example.foodfindr2.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.foodfindr2.R;
+import com.example.foodfindr2.activities.ChangePasswordActivity;
+import com.example.foodfindr2.activities.LoginActivity;
+import com.example.foodfindr2.activities.MainActivity;
+import com.example.foodfindr2.utils.CurrentUser;
 
 public class SettingsFragment extends Fragment {
 
@@ -32,9 +37,19 @@ public class SettingsFragment extends Fragment {
 
         // Handle Log Out
         view.findViewById(R.id.tv_log_out).setOnClickListener(v -> {
-            Toast.makeText(getActivity(), "Logged Out", Toast.LENGTH_SHORT).show();
-            // Add actual log-out logic here
+            // Manually reset CurrentUser data
+//            CurrentUser.getInstance().setUserId(null);
+//            CurrentUser.getInstance().setUsername(null);
+
+            // Redirect to LoginActivity
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+
+            // Show a confirmation message
+            Toast.makeText(getActivity(), "Logged Out Successfully", Toast.LENGTH_SHORT).show();
         });
+
 
         // Handle Edit Profile (Placeholder)
         view.findViewById(R.id.tv_edit_profile).setOnClickListener(v -> {
@@ -43,6 +58,9 @@ public class SettingsFragment extends Fragment {
 
         // Handle Change Password (Placeholder)
         view.findViewById(R.id.tv_change_password).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             Toast.makeText(getActivity(), "Change Password Clicked", Toast.LENGTH_SHORT).show();
         });
 

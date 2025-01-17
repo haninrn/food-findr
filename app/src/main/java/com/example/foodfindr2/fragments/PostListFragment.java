@@ -1,6 +1,12 @@
 package com.example.foodfindr2.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -8,17 +14,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.foodfindr2.R;
 import com.example.foodfindr2.adapter.DonationAdapter;
 import com.example.foodfindr2.model.Donation;
 import com.example.foodfindr2.model.DonationWithItems;
-import com.example.foodfindr2.utils.CurrentUser;
 import com.example.foodfindr2.viewmodel.DonationViewModel;
 
 import java.util.ArrayList;
@@ -65,17 +64,19 @@ public class PostListFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        // Initialize ViewModel before creating the adapter
+        donationViewModel = new ViewModelProvider(requireActivity()).get(DonationViewModel.class);
+
+        // Initialize the adapter
         adapter = new DonationAdapter(donation -> {
             // Handle claim button click logic here
             Toast.makeText(requireContext(), "Claimed donation: " + donation.getDescription(), Toast.LENGTH_SHORT).show();
 
-            // Example: Notify ViewModel to update the donation's status
+            // Notify ViewModel to update the donation's status
             donationViewModel.updateDonationStatus(donation.getDonation_id(), "Claimed");
-        });
+        }, donationViewModel); // Pass the ViewModel to the adapter
 
         recyclerView.setAdapter(adapter);
-
-        donationViewModel = new ViewModelProvider(requireActivity()).get(DonationViewModel.class);
 
         // Load the appropriate list based on listType
         loadListData();
@@ -84,23 +85,34 @@ public class PostListFragment extends Fragment {
     private void loadListData() {
         switch (listType) {
             case LIST_TYPE_MY_POSTS:
-                donationViewModel.getMyPosts().observe(getViewLifecycleOwner(), donations -> {
-                    List<DonationWithItems> donationWithItemsList = transformToDonationWithItems(donations);
-                    adapter.submitList(donationWithItemsList); // Submit transformed list
+                donationViewModel.getMyPosts().observe(getViewLifecycleOwner(), donationWithItemsList -> {
+                    if (donationWithItemsList != null) {
+                        adapter.submitList(donationWithItemsList);
+                    } else {
+                        Log.d("PostListFragment", "No posts found for the current user.");
+                    }
                 });
                 break;
 
             case LIST_TYPE_PENDING_REQUESTS:
                 donationViewModel.getPendingRequests().observe(getViewLifecycleOwner(), donations -> {
-                    List<DonationWithItems> donationWithItemsList = transformToDonationWithItems(donations);
-                    adapter.submitList(donationWithItemsList); // Submit transformed list
+                    if (donations != null) {
+                        List<DonationWithItems> donationWithItemsList = transformToDonationWithItems(donations);
+                        adapter.submitList(donationWithItemsList);
+                    } else {
+                        Log.d("PostListFragment", "No pending requests found.");
+                    }
                 });
                 break;
 
             case LIST_TYPE_CLAIMED:
                 donationViewModel.getClaimedDonations().observe(getViewLifecycleOwner(), donations -> {
-                    List<DonationWithItems> donationWithItemsList = transformToDonationWithItems(donations);
-                    adapter.submitList(donationWithItemsList); // Submit transformed list
+                    if (donations != null) {
+                        List<DonationWithItems> donationWithItemsList = transformToDonationWithItems(donations);
+                        adapter.submitList(donationWithItemsList);
+                    } else {
+                        Log.d("PostListFragment", "No claimed donations found.");
+                    }
                 });
                 break;
         }
@@ -111,12 +123,9 @@ public class PostListFragment extends Fragment {
         for (Donation donation : donations) {
             DonationWithItems donationWithItems = new DonationWithItems();
             donationWithItems.donation = donation;
-            donationWithItems.items = new ArrayList<>(); // Add placeholder empty list or fetch actual items if needed
+            donationWithItems.items = new ArrayList<>(); // Placeholder or fetch actual items
             donationWithItemsList.add(donationWithItems);
         }
         return donationWithItemsList;
     }
-
-
-
 }

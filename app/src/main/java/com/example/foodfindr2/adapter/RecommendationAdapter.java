@@ -1,6 +1,7 @@
 package com.example.foodfindr2.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.foodfindr2.R;
 
 import java.util.List;
@@ -49,7 +51,15 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
         holder.status.setText(item.getStatus());
         holder.owner.setText(item.getOwner());
         holder.rating.setText(String.valueOf(item.getRating()));
-        holder.appleImageView.setImageResource(item.getImageResId()); // Apple image
+        if (item.getImageResId() != null) { // Check if byte[] exists
+            Glide.with(holder.appleImageView.getContext())
+                    .asBitmap()
+                    .load(item.getImageResId()) // Use the byte[]
+                    .into(holder.appleImageView);
+        } else {
+            Log.d("RecommendationAdapter", "Image byte[] is null for item: " + item.getTitle());
+            holder.appleImageView.setImageResource(R.drawable.apples); // Placeholder image
+        } // Apple image
 
         // Set status background based on availability
         if (item.getStatus().equalsIgnoreCase("Available")) {
@@ -83,7 +93,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
             status = itemView.findViewById(R.id.TVStatus);
             owner = itemView.findViewById(R.id.TVOwner);
             rating = itemView.findViewById(R.id.TVRating);
-            appleImageView = itemView.findViewById(R.id.IVApple); // Apple image
+            appleImageView = itemView.findViewById(R.id.IVItemImage ); //  image
         }
     }
 

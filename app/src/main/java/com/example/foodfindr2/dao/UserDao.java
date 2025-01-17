@@ -50,6 +50,10 @@ public interface UserDao {
     // Count the number of users
     @Query("SELECT COUNT(*) FROM users")
     int countUsers();
+
+    @Query("UPDATE users SET password = :newPassword WHERE id = :userId")
+    void updatePassword(int userId, String newPassword);
+
 }
 
 

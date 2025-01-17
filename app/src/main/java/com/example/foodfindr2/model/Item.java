@@ -30,6 +30,5 @@ public class Item {
     public Date manufacture_date; // Nullable: manufacture date
     @Nullable
     public Date expiry_date; // Nullable: expiry date
-    @Nullable
-    public byte[] image_blob; // Image stored as a byte array (nullable)
+ // Image stored as a byte array (nullable)
 }

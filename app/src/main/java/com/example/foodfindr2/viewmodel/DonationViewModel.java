@@ -32,6 +32,8 @@ public class DonationViewModel extends AndroidViewModel {
     }
 
 
+
+
     public LiveData<List<DonationWithItems>> getAvailableDonations() {
         return availableDonations;
     }
@@ -68,17 +70,21 @@ public class DonationViewModel extends AndroidViewModel {
         return donationRepository.getItemNameByDonationId(donationId);
     }
 
-    public LiveData<List<Donation>> getMyPosts() {
-        return donationRepository.getDonationsByUser(CurrentUser.getInstance().getUserId());
+    public LiveData<List<DonationWithItems>> getMyPosts() {
+        int currentUserId = CurrentUser.getInstance().getUserId();
+        return donationRepository.getDonationsByUser(currentUserId); // Correct type returned
     }
+
+
 
 
 
     public LiveData<List<Donation>> getPendingRequests() {
         int currentUserId = CurrentUser.getInstance().getUserId();
-        return Transformations.map(getMyPosts(), donations -> {
+        return Transformations.map(getMyPosts(), donationWithItemsList -> {
             List<Donation> filtered = new ArrayList<>();
-            for (Donation donation : donations) {
+            for (DonationWithItems donationWithItems : donationWithItemsList) {
+                Donation donation = donationWithItems.donation; // Extract the Donation object
                 if ("Pending".equals(donation.getStatus()) && donation.getDonor_id() == currentUserId) {
                     filtered.add(donation);
                 }
@@ -87,11 +93,13 @@ public class DonationViewModel extends AndroidViewModel {
         });
     }
 
+
     public LiveData<List<Donation>> getClaimedDonations() {
         int currentUserId = CurrentUser.getInstance().getUserId();
-        return Transformations.map(getMyPosts(), donations -> {
+        return Transformations.map(getMyPosts(), donationWithItemsList -> {
             List<Donation> claimedDonations = new ArrayList<>();
-            for (Donation donation : donations) {
+            for (DonationWithItems donationWithItems : donationWithItemsList) {
+                Donation donation = donationWithItems.donation;
                 // Add null check for receiver_id
                 if (donation.getReceiver_id() != null && donation.getReceiver_id() == currentUserId && "Claimed".equals(donation.getStatus())) {
                     claimedDonations.add(donation);
@@ -101,10 +109,36 @@ public class DonationViewModel extends AndroidViewModel {
         });
     }
 
+    public void updateDonationRating(int donationId, float rating) {
+        donationRepository.updateDonationRating(donationId, rating);
+    }
 
+    public LiveData<Float> getAverageRatingForUser(int userId) {
+        return donationRepository.getAverageRatingForUser(userId);
+    }
 
+    public LiveData<String> getUserName(int userId) {
+        return donationRepository.getUserName(userId);
+    }
 
+    // Fetch total donated count
+    public LiveData<Integer> getTotalDonatedCount(int userId) {
+        return donationRepository.getTotalDonatedCount(userId);
+    }
 
+    // Fetch total items taken
+    public LiveData<Integer> getTotalTakenCount(int userId) {
+        return donationRepository.getTotalTakenCount(userId);
+    }
+
+    // Fetch total items given
+    public LiveData<Integer> getTotalGivenCount(int userId) {
+        return donationRepository.getTotalGivenCount(userId);
+    }
+
+    public LiveData<String> getUsernameById(int userId) {
+        return donationRepository.getUsernameById(userId);
+    }
 
 
 

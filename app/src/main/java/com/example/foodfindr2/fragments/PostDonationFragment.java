@@ -1,8 +1,13 @@
 package com.example.foodfindr2.fragments;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,10 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,6 +35,9 @@ import com.example.foodfindr2.viewmodel.DonationViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,6 +47,10 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.google.android.material.textfield.TextInputEditText;
+import android.widget.ImageView;
+import com.google.android.material.textfield.TextInputLayout;
+
 public class PostDonationFragment extends Fragment {
 
     private Spinner foodTypeSpinner;
@@ -42,7 +58,15 @@ public class PostDonationFragment extends Fragment {
     private Spinner citySpinner;
     private TextInputLayout otherCategoryInputLayout, itemNameInput, quantityInput, addressInput, descriptionInput, pickupInstructionsInput, manufacturingDateInput, expiryDateInput;
     private TextInputEditText itemNameEditText, otherCategoryEditText, quantityEditText, addressEditText, descriptionEditText, pickupInstructionsEditText, manufacturingDateEditText, expiryDateEditText;
-    private Button submitButton;
+    private Button submitButton, uploadImageButton;
+
+    private ImageView imageUploadView;
+
+
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+
+    private Uri imageUri;
 
     private DonationViewModel donationViewModel;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -57,11 +81,8 @@ public class PostDonationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post_donation, container, false);
 
-        citySpinner = view.findViewById(R.id.citySpinner);
 
         // Set up city spinner
-
-
         // Initialize views
         foodTypeSpinner = view.findViewById(R.id.foodTypeSpinner);
         citySpinner = view.findViewById(R.id.citySpinner);
@@ -76,6 +97,9 @@ public class PostDonationFragment extends Fragment {
         expiryDateInput = view.findViewById(R.id.expiryDateInput);
         submitButton = view.findViewById(R.id.submitButton);
 
+        uploadImageButton = view.findViewById(R.id.uploadImageButton);
+        imageUploadView = view.findViewById(R.id.imageUploadView);
+
         itemNameEditText = (TextInputEditText) itemNameInput.getEditText();
         quantityEditText = (TextInputEditText) quantityInput.getEditText();
         addressEditText = (TextInputEditText) addressInput.getEditText();
@@ -89,7 +113,9 @@ public class PostDonationFragment extends Fragment {
         setupFoodTypeSpinner();
         setupCitySpinner();
         setupDatePickers();
+        setupImagePicker();
         setupSubmitButton();
+
 
         return view;
     }
@@ -132,18 +158,18 @@ public class PostDonationFragment extends Fragment {
         citySpinner.setSelection(0);
 
         // Optional: Add a listener for when the user selects a city
-        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedCity = cities[position];
-                Toast.makeText(requireContext(), "Selected city: " + selectedCity, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Handle case when nothing is selected, if needed
-            }
-        });
+//        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String selectedCity = cities[position];
+//                Toast.makeText(requireContext(), "Selected city: " + selectedCity, Toast.LENGTH_SHORT).show();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                // Handle case when nothing is selected, if needed
+//            }
+//        });
         }
 
     private void setupDatePickers() {
@@ -168,6 +194,52 @@ public class PostDonationFragment extends Fragment {
                 day
         );
         datePickerDialog.show();
+    }
+
+    private void setupImagePicker() {
+        uploadImageButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*"); // Allow all file types
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            startActivityForResult(Intent.createChooser(intent, "Select an Image"), PICK_IMAGE_REQUEST);
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == getActivity().RESULT_OK) {
+            if (data != null && data.getData() != null) {
+                imageUri = data.getData();
+                imageUploadView.setImageURI(imageUri); // Display selected image in ImageView
+                // Optional: Log the file name for debugging
+                logFileName(imageUri);
+
+            } else {
+
+                Toast.makeText(requireContext(), "No image selected", Toast.LENGTH_SHORT).show();
+
+            }
+            if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
+                imageUri = data.getData();
+                imageUploadView.setImageURI(imageUri);
+            }else {
+
+                Toast.makeText(requireContext(), "No image selected", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    }
+
+    private byte[] getImageBytes(Uri uri) throws IOException {
+        InputStream inputStream = requireContext().getContentResolver().openInputStream(uri);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, len);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 
     private void setupSubmitButton() {
@@ -218,6 +290,7 @@ public class PostDonationFragment extends Fragment {
             donation.pickup_instructions = pickupInstructions;
             donation.address = address;
             donation.city = city;
+            donation.rating = 0.0F;
 
             Item item = new Item();
             item.item_name = itemName;
@@ -225,12 +298,42 @@ public class PostDonationFragment extends Fragment {
             item.manufacture_date = manufacturingDate;
             item.expiry_date = expiryDate;
 
+
+            if (imageUri != null) {
+                try {
+                    donation.image_blob = getImageBytes(imageUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(requireContext(), "Failed to process image.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            } else {
+                Toast.makeText(requireContext(), "Please select an image.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             List<Item> items = new ArrayList<>();
             items.add(item);
 
             donationViewModel.addDonationWithItems(donation, items);
             Toast.makeText(requireContext(), "Donation added successfully!", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void logFileName(Uri uri) {
+        try {
+            Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                String fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                cursor.close();
+                Log.d("File Picker", "Selected file: " + fileName);
+            }
+        } catch (Exception e) {
+
+            Log.e("File Picker", "Failed to get file name", e);
+
+        }
+
     }
 
 }

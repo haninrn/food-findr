@@ -54,8 +54,6 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (user != null) {
                             Toast.makeText(this, "User found! Welcome, " + user.getUsername(), Toast.LENGTH_SHORT).show();
-//                            Intent intent = new Intent(this, HomeActivity.class);
-//                            startActivity(intent);
                             Intent intent = new Intent(this, NavigationActivity.class);
                             startActivity(intent);
 

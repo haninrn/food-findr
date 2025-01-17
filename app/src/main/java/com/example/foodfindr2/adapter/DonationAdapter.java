@@ -1,5 +1,6 @@
 package com.example.foodfindr2.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +17,20 @@ import com.bumptech.glide.Glide;
 import com.example.foodfindr2.R;
 import com.example.foodfindr2.model.Donation;
 import com.example.foodfindr2.model.DonationWithItems;
+import com.example.foodfindr2.viewmodel.DonationViewModel;
 
 public class DonationAdapter extends ListAdapter<DonationWithItems, DonationAdapter.DonationViewHolder> {
 
     private final OnClaimButtonClickListener claimButtonClickListener;
+    private DonationViewModel donationViewModel;
 
     // Constructor accepts a callback for claim button clicks
-    public DonationAdapter(OnClaimButtonClickListener claimButtonClickListener) {
+    public DonationAdapter(OnClaimButtonClickListener claimButtonClickListener, DonationViewModel donationViewModel) {
         super(DIFF_CALLBACK);
         this.claimButtonClickListener = claimButtonClickListener;
+        this.donationViewModel = donationViewModel;
     }
+
 
     @NonNull
     @Override
@@ -40,25 +45,42 @@ public class DonationAdapter extends ListAdapter<DonationWithItems, DonationAdap
         DonationWithItems donationWithItems = getItem(position);
         Donation donation = donationWithItems.donation;
 
+        Log.d("DonationAdapter", "Binding position: " + position);
+        Log.d("DonationAdapter", "Donation: " + donationWithItems.donation.description);
+        Log.d("DonationAdapter", "Items size: " + (donationWithItems.items != null ? donationWithItems.items.size() : 0));
+
         // Check if items list is not null or empty before accessing it
-        if (donationWithItems.items != null && !donationWithItems.items.isEmpty()) {
-            holder.itemName.setText(donationWithItems.items.get(0).item_name); // Display first item's name
-            if (donationWithItems.items.get(0).image_blob != null) {
-                byte[] imageBlob = donationWithItems.items.get(0).image_blob;
+        if (donationWithItems.donation != null) {
+            // Set item name from the first item, or use a fallback
+            holder.itemName.setText(donationWithItems.donation.description != null
+                    ? donationWithItems.donation.description
+                    : "No description available");
+            if (donationWithItems.donation.image_blob != null) {
+                // Load image_blob from the donations table
+                byte[] imageBlob = donationWithItems.donation.image_blob;
                 Glide.with(holder.itemImage.getContext())
                         .asBitmap()
                         .load(imageBlob)
-                        .into(holder.itemImage); // Load the item's image
+                        .into(holder.itemImage); // Load the donation's image
             } else {
+                Log.d("DonationAdapter", "Image blob is null for donation ID: " + donationWithItems.donation.donation_id);
                 holder.itemImage.setImageResource(R.drawable.bronze_medal); // Placeholder image
             }
         } else {
-            holder.itemName.setText("No items available"); // Fallback for empty list
+            holder.itemName.setText("No donation available"); // Fallback for empty donation
             holder.itemImage.setImageResource(R.drawable.bronze_medal); // Placeholder image
         }
 
         // Set donor name and status
-        holder.donorName.setText("Donor ID: " + donation.donor_id); // Replace with actual donor name if available
+        // Set placeholder while fetching username
+        holder.donorName.setText("Loading donor name...");
+
+        // Fetch and display the username
+        donationViewModel.getUserName(donation.donor_id).observeForever(username -> {
+            holder.donorName.setText(username != null ? username : "Unknown Donor");
+        });
+
+
         holder.status.setText(donation.status);
 
         // Handle claim button click

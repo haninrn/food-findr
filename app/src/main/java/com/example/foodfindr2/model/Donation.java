@@ -42,6 +42,12 @@ public class Donation {
     public String address; // Address for the specific donation
     public String city; // City for the specific donation
 
+    @Nullable
+    public byte[] image_blob;
+
+    @Nullable
+    public Float rating;
+
     // Getters and Setters
     public int getDonation_id() {
         return donation_id;
@@ -133,5 +139,15 @@ public class Donation {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public float getRating() {
+        return rating != null ? rating : 0.0f;
+    }
+
+
+    public void setRating(@Nullable Float rating) {
+        this.rating = rating;
+    }
+
 
 }

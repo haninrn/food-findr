@@ -112,22 +112,31 @@ public class HomeFragment extends Fragment {
             Log.d("HomeFragment", "Donation ID: " + donation.donation_id);
             Log.d("HomeFragment", "Description: " + donation.description);
             Log.d("HomeFragment", "Status: " + donation.status);
-            for (Item item : donationWithItems.items) {
-                Log.d("HomeFragment", "Item Name: " + item.item_name);
-                Log.d("HomeFragment", "Category: " + item.category);
-                recommendations.add(new RecommendationItem(
-                        item.item_name,
-                        donation.city,
-                        donation.status,
-                        "Owner Name", // Replace with the actual owner's name if available
-                        5.0, // Replace with actual rating if applicable
-                        R.drawable.apples, // Replace with actual image
-                        donation.getDonation_id()
-                ));
-            }
+
+            // Fetch donor name dynamically
+            donationViewModel.getUsernameById(donation.donor_id).observe(getViewLifecycleOwner(), username -> {
+                for (Item item : donationWithItems.items) {
+                    Log.d("HomeFragment", "Item Name: " + item.item_name);
+                    Log.d("HomeFragment", "Category: " + item.category);
+                    Log.d("HomeFragment", "Image blob length: " + (donation.image_blob != null ? donation.image_blob.length : "null"));
+
+                    recommendations.add(new RecommendationItem(
+                            item.item_name,
+                            donation.city,
+                            donation.status,
+                            username != null ? username : "hani", // Replace with fetched username
+                            5.0, // Replace with actual rating if applicable
+                            donation.image_blob, // Replace with actual image
+                            donation.getDonation_id()
+                    ));
+                }
+
+                // Update adapter list once recommendations are updated
+                adapter.updateList(recommendations);
+            });
         }
-        adapter.updateList(recommendations);
     }
+
 
     public void onRecommendationClick(int donationId) {
         // Navigate to the DonationDetailFragment

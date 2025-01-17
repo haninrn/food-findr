@@ -34,4 +34,5 @@ public class CurrentUser {
     public void setUsername(String username) {
         this.username = username;
     }
+
 }

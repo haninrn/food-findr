@@ -31,6 +31,7 @@ public interface DonationDao {
     @Query("SELECT * FROM donations")
     List<Donation> getAllDonations();
 
+
     // Get donations by status
     @Query("SELECT * FROM donations WHERE status = :status")
     List<Donation> getDonationsByStatus(String status);
@@ -59,12 +60,40 @@ public interface DonationDao {
     @Query("UPDATE donations SET receiver_id = :receiverId, status = :newStatus WHERE donation_id = :donationId")
     void updateReceiverAndStatus(int donationId, int receiverId, String newStatus);
 
+    @Transaction
     @Query("SELECT * FROM donations WHERE donor_id = :userId")
-    LiveData<List<Donation>> getDonationsByUser(int userId);
+    LiveData<List<DonationWithItems>> getDonationsByUser(int userId);
 
 
     @Query("SELECT * FROM donations WHERE receiver_id = :userId")
     LiveData<List<Donation>> getClaimedDonationsByUser(int userId);
+
+    @Query("UPDATE donations SET rating = :rating WHERE donation_id = :donationId")
+    void updateDonationRating(int donationId, float rating);
+
+    @Query("SELECT AVG(rating) FROM donations WHERE donor_id = :userId")
+    LiveData<Float> getAverageRatingForUser(int userId);
+
+    @Query("SELECT username FROM users WHERE id = :userId")
+    LiveData<String> getUserName(int userId);
+
+    // Get the total count of donations made by the user
+    @Query("SELECT COUNT(*) FROM donations WHERE donor_id = :userId")
+    LiveData<Integer> getTotalDonatedCount(int userId);
+
+    // Get the total count of items taken by the user
+    @Query("SELECT COUNT(*) FROM donations WHERE receiver_id = :userId")
+    LiveData<Integer> getTotalTakenCount(int userId);
+
+    // Get the total count of donations given by the user with status "Completed"
+    @Query("SELECT COUNT(*) FROM donations WHERE donor_id = :userId AND status = 'Claimed'")
+    LiveData<Integer> getTotalGivenCount(int userId);
+
+    @Query("SELECT image_blob FROM donations WHERE donation_id = :donationId")
+    LiveData<byte[]> getDonationImage(int donationId);
+
+    @Query("SELECT username FROM users WHERE id = :userId")
+    LiveData<String> getUsernameById(int userId);
 
 
 

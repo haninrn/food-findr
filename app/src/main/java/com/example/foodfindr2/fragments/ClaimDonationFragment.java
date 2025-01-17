@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,13 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.foodfindr2.R;
 import com.example.foodfindr2.utils.CurrentUser;
 import com.example.foodfindr2.viewmodel.DonationViewModel;
 
 public class ClaimDonationFragment extends Fragment {
 
-    private TextView tvTitle, tvStatus, tvDonor, tvLocation, tvDescription;
+    private TextView tvTitle, tvStatus, tvDonor, tvLocation, tvDescription, tvPickupInstructions;
+    private ImageView mainImageView;
     private Button btnClaim, btnRelease;
     private int donationId;
     private DonationViewModel donationViewModel;
@@ -33,6 +36,8 @@ public class ClaimDonationFragment extends Fragment {
         tvDonor = view.findViewById(R.id.ownerName);
         tvLocation = view.findViewById(R.id.donationLocation);
         tvDescription = view.findViewById(R.id.donationDescription);
+        tvPickupInstructions = view.findViewById(R.id.pickupInstructions); // New field for pickup instructions
+        mainImageView = view.findViewById(R.id.mainImageView);
         btnClaim = view.findViewById(R.id.claimButton);
         btnRelease = view.findViewById(R.id.releaseButton);
 
@@ -48,6 +53,9 @@ public class ClaimDonationFragment extends Fragment {
                     tvStatus.setText(donation.getStatus());
                     tvLocation.setText("Location: " + donation.getCity() + ", " + donation.getAddress());
                     tvDescription.setText(donation.getDescription());
+                    tvPickupInstructions.setText(donation.getPickup_instructions() != null
+                            ? donation.getPickup_instructions()
+                            : "No instructions provided."); // Display pickup instructions
 
                     // Fetch and display donor name
                     donationViewModel.getDonorName(donation.getDonor_id()).observe(getViewLifecycleOwner(), donorName -> {
@@ -58,6 +66,7 @@ public class ClaimDonationFragment extends Fragment {
                         }
                     });
 
+                    // Fetch and display item name
                     donationViewModel.getItemNameByDonationId(donationId).observe(getViewLifecycleOwner(), itemName -> {
                         if (itemName != null) {
                             tvTitle.setText(itemName);
@@ -66,6 +75,15 @@ public class ClaimDonationFragment extends Fragment {
                         }
                     });
 
+                    // Display donation image
+                    if (donation.image_blob != null) {
+                        Glide.with(requireContext())
+                                .asBitmap()
+                                .load(donation.image_blob) // Load image from byte[]
+                                .into(mainImageView);
+                    } else {
+                        mainImageView.setImageResource(R.drawable.apples); // Placeholder if no image
+                    }
 
                     // Get current user ID
                     int currentUserId = CurrentUser.getInstance().getUserId();
@@ -93,7 +111,7 @@ public class ClaimDonationFragment extends Fragment {
 
         // Set up Release button
         btnRelease.setOnClickListener(v -> {
-            donationViewModel.updateDonationStatus(donationId, "Completed");
+            donationViewModel.updateDonationStatus(donationId, "Claimed");
             Toast.makeText(requireContext(), "Donation released! Thank you for your contribution.", Toast.LENGTH_SHORT).show();
         });
 

@@ -8,6 +8,7 @@ import com.example.foodfindr2.AppDatabase;
 import com.example.foodfindr2.dao.DonationDao;
 import com.example.foodfindr2.dao.ItemDao;
 import com.example.foodfindr2.model.Donation;
+import com.example.foodfindr2.model.DonationWithItems;
 import com.example.foodfindr2.model.Item;
 
 import java.util.List;
@@ -52,13 +53,45 @@ public class DonationRepository {
         return itemDao.getItemNameByDonationId(donationId);
     }
 
-    public LiveData<List<Donation>> getDonationsByUser(int userId) {
-        return donationDao.getDonationsByUser(userId);
+    public LiveData<List<DonationWithItems>> getDonationsByUser(int userId) {
+        return donationDao.getDonationsByUser(userId); // Correctly matches the DAO method's return type
     }
+
 
     public LiveData<List<Donation>> getClaimedDonationsByUser(int userId) {
         return donationDao.getClaimedDonationsByUser(userId);
     }
+
+    public void updateDonationRating(int donationId, float rating) {
+        executorService.execute(() -> donationDao.updateDonationRating(donationId, rating));
+    }
+
+    public LiveData<Float> getAverageRatingForUser(int userId) {
+        return donationDao.getAverageRatingForUser(userId);
+    }
+
+    public LiveData<String> getUserName(int userId) {
+        return donationDao.getUserName(userId);
+    }
+
+    public LiveData<Integer> getTotalDonatedCount(int userId) {
+        return donationDao.getTotalDonatedCount(userId);
+    }
+
+    public LiveData<Integer> getTotalTakenCount(int userId) {
+        return donationDao.getTotalTakenCount(userId);
+    }
+
+    public LiveData<Integer> getTotalGivenCount(int userId) {
+        return donationDao.getTotalGivenCount(userId);
+    }
+
+    public LiveData<String> getUsernameById(int userId) {
+        return donationDao.getUsernameById(userId);
+    }
+
+
+
 
 
 }

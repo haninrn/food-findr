@@ -6,17 +6,16 @@ public class RecommendationItem {
     private String status;
     private String owner;
     private double rating;
-    private int imageResId;
-
+    private byte[] imageBlob;
     private int donationId;
 
-    public RecommendationItem(String title, String location, String status, String owner, double rating, int imageResId, int donationId) {
+    public RecommendationItem(String title, String location, String status, String owner, double rating, byte[] imageBlob, int donationId) {
         this.title = title;
         this.location = location;
         this.status = status;
         this.owner = owner;
         this.rating = rating;
-        this.imageResId = imageResId;
+        this.imageBlob = imageBlob;
         this.donationId = donationId;
     }
 
@@ -40,8 +39,8 @@ public class RecommendationItem {
         return rating;
     }
 
-    public int getImageResId() {
-        return imageResId;
+    public byte[] getImageResId() {
+        return imageBlob;
     }
 
     public int getDonationId() {

@@ -15,7 +15,6 @@
             android:id="@+id/mainImageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:src="@drawable/apples"
             android:scaleType="centerCrop"
             android:layout_marginBottom="16dp" />
 
@@ -106,6 +105,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Extra pack of 6 apples I don't think I could finish."
+            android:layout_marginBottom="16dp" />
+
+        <!-- Pickup Instructions -->
+        <TextView
+            android:id="@+id/pickupInstructionsLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Pickup Instructions"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/pickupInstructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Please call ahead before pickup."
             android:layout_marginBottom="16dp" />
 
         <!-- Claim, Release, and Share Buttons -->
