@@ -1,6 +1,11 @@
 package com.example.foodfindr2.fragments;
 
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,10 +116,48 @@ public class ClaimDonationFragment extends Fragment {
 
         // Set up Release button
         btnRelease.setOnClickListener(v -> {
+            // Update the donation status to "Claimed"
             donationViewModel.updateDonationStatus(donationId, "Claimed");
             Toast.makeText(requireContext(), "Donation released! Thank you for your contribution.", Toast.LENGTH_SHORT).show();
+
+            // Fetch the current user's total given count
+            int currentUserId = CurrentUser.getInstance().getUserId();
+            donationViewModel.getTotalGivenCount(currentUserId).observe(getViewLifecycleOwner(), totalGiven -> {
+                if (totalGiven == 1 || totalGiven == 2 || totalGiven == 3) {
+                    // Trigger the achievement popup if a threshold is reached
+                    showAchievementPopup(totalGiven);
+                }
+            });
         });
 
         return view;
+    }
+
+    // Achievement popup logic
+    private void showAchievementPopup(int totalGiven) {
+        Dialog dialog = new Dialog(requireContext());
+
+
+        TextView title = dialog.findViewById(R.id.tvTitle);
+        ImageView badgeIcon = dialog.findViewById(R.id.ivGold); // Adjust dynamically based on the badge
+
+
+        // Customize the popup based on the threshold
+        if (totalGiven == 3) {
+            dialog.setContentView(R.layout.popup_achievement_gold);
+        } else if (totalGiven == 2) {
+            dialog.setContentView(R.layout.popup_achievement);
+        } else if (totalGiven == 1) {
+            dialog.setContentView(R.layout.popup_achievement_bronze);
+        }
+
+        // Display the dialog
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.show();
+
+        // Auto-dismiss after 6 seconds
+        new Handler(Looper.getMainLooper()).postDelayed(dialog::dismiss, 10000);
     }
 }

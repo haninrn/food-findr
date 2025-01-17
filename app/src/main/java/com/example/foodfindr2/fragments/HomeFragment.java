@@ -109,26 +109,21 @@ public class HomeFragment extends Fragment {
         List<RecommendationItem> recommendations = new ArrayList<>();
         for (DonationWithItems donationWithItems : donationWithItemsList) {
             Donation donation = donationWithItems.donation;
-            Log.d("HomeFragment", "Donation ID: " + donation.donation_id);
-            Log.d("HomeFragment", "Description: " + donation.description);
-            Log.d("HomeFragment", "Status: " + donation.status);
 
-            // Fetch donor name dynamically
             donationViewModel.getUsernameById(donation.donor_id).observe(getViewLifecycleOwner(), username -> {
-                for (Item item : donationWithItems.items) {
-                    Log.d("HomeFragment", "Item Name: " + item.item_name);
-                    Log.d("HomeFragment", "Category: " + item.category);
-                    Log.d("HomeFragment", "Image blob length: " + (donation.image_blob != null ? donation.image_blob.length : "null"));
+                if(donation.status.equals("Available") || donation.status.equals("Pending")) {
+                    for (Item item : donationWithItems.items) {
 
-                    recommendations.add(new RecommendationItem(
-                            item.item_name,
-                            donation.city,
-                            donation.status,
-                            username != null ? username : "hani", // Replace with fetched username
-                            5.0, // Replace with actual rating if applicable
-                            donation.image_blob, // Replace with actual image
-                            donation.getDonation_id()
-                    ));
+                        recommendations.add(new RecommendationItem(
+                                item.item_name,
+                                donation.city,
+                                donation.status,
+                                username != null ? username : "hani",
+                                donation.rating != null ? donation.rating : 0.0,
+                                donation.image_blob,
+                                donation.getDonation_id()
+                        ));
+                    }
                 }
 
                 // Update adapter list once recommendations are updated

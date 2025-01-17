@@ -39,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase {
             synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     // Delete the existing database if schema changes
-                    context.getApplicationContext().deleteDatabase("app_database");
+//                    context.getApplicationContext().deleteDatabase("app_database");
 
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "app_database")

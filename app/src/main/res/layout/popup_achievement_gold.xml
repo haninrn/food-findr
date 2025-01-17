@@ -1,0 +1,196 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CONGRATULATIONS ON YOUR ACHIEVEMENT!"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:paddingBottom="16dp" />
+
+    <!-- Gold Achievement Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        android:background="@drawable/rounded_background_available">
+
+        <ImageView
+            android:id="@+id/ivGold"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/gold_medal"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Donated more than 100 foods"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/achievementDescriptionGold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You are a top donor!"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="GOLD"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_orange_dark" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ACHIEVED!"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+    <!-- Silver Achievement Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        android:background="@drawable/rounded_background">
+
+        <ImageView
+            android:id="@+id/ivSilver"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/silver_medal"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Donated more than 50 foods"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/achievementDescriptionSilver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Great progress! Keep donating."
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SILVER"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/darker_gray" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ACHIEVED!"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+    <!-- Bronze Achievement Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="16dp"
+        android:padding="8dp"
+        android:background="@drawable/rounded_background">
+
+        <ImageView
+            android:id="@+id/ivBronze"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/bronze_medal"
+            android:layout_marginEnd="8dp" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Donated more than 10 foods"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/achievementDescriptionBronze"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You’ve unlocked your first badge!"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                android:layout_marginTop="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="BRONZE"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_orange_dark" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ACHIEVED!"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark" />
+    </LinearLayout>
+
+    <!-- Footer Image -->
+    <ImageView
+        android:id="@+id/ivFooter"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/signupicon"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.foodfindr2.R;
@@ -20,8 +21,6 @@ import com.example.foodfindr2.utils.CurrentUser;
 import com.example.foodfindr2.viewmodel.DonationViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.example.foodfindr2.viewmodel.DonationViewModel;
-
 
 public class ProfileFragment extends Fragment {
 
@@ -29,6 +28,7 @@ public class ProfileFragment extends Fragment {
 
     // UI elements for profile data
     private TextView profileName, profileRating, profileTotalDonated, profileTaken, profileGiven;
+    private ImageView profileBadge;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -52,6 +52,7 @@ public class ProfileFragment extends Fragment {
         profileTotalDonated = view.findViewById(R.id.profileTotalDonated);
         profileTaken = view.findViewById(R.id.profileTaken);
         profileGiven = view.findViewById(R.id.profileGiven);
+        profileBadge = view.findViewById(R.id.profileBadge);
 
         // Populate profile data
         populateProfileData();
@@ -62,7 +63,6 @@ public class ProfileFragment extends Fragment {
 
         ProfilePagerAdapter adapter = new ProfilePagerAdapter(requireActivity());
         viewPager.setAdapter(adapter);
-
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
@@ -106,6 +106,19 @@ public class ProfileFragment extends Fragment {
         donationViewModel.getTotalGivenCount(currentUserId).observe(getViewLifecycleOwner(), totalGiven -> {
             Log.d("ProfileFragment", "Total Given Count: " + totalGiven);
             profileGiven.setText(String.valueOf(totalGiven));
+            // Set badge based on total donated items
+            if (totalGiven >= 3) {
+                profileBadge.setImageResource(R.drawable.gold_medal);
+                profileBadge.setVisibility(View.VISIBLE);
+            } else if (totalGiven >= 2) {
+                profileBadge.setImageResource(R.drawable.silver_medal);
+                profileBadge.setVisibility(View.VISIBLE);
+            } else if (totalGiven >= 1) {
+                profileBadge.setImageResource(R.drawable.bronze_medal);
+                profileBadge.setVisibility(View.VISIBLE);
+            } else {
+                profileBadge.setVisibility(View.GONE);
+            }
         });
 
         donationViewModel.getAverageRatingForUser(currentUserId).observe(getViewLifecycleOwner(), rating -> {
@@ -113,6 +126,4 @@ public class ProfileFragment extends Fragment {
             profileRating.setText(rating != null ? "⭐ " + String.format("%.1f", rating) : "⭐ No Ratings Yet");
         });
     }
-
 }
-

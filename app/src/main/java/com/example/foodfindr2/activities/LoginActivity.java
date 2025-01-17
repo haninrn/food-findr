@@ -57,12 +57,12 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(this, NavigationActivity.class);
                             startActivity(intent);
 
-                            CurrentUser.getInstance().setUserId(user.getId()); // Replace `1` with the actual user ID
-                            CurrentUser.getInstance().setUsername(user.getUsername()); // Replace with the actual username
+                            CurrentUser.getInstance().setUserId(user.getId());
+                            CurrentUser.getInstance().setUsername(user.getUsername());
 
                             finish();
 
-                            // Navigate to another activity if needed
+
                         } else {
                             Toast.makeText(this, "User not found. Please try again.", Toast.LENGTH_SHORT).show();
                         }

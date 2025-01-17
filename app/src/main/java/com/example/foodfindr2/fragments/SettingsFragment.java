@@ -37,16 +37,14 @@ public class SettingsFragment extends Fragment {
 
         // Handle Log Out
         view.findViewById(R.id.tv_log_out).setOnClickListener(v -> {
-            // Manually reset CurrentUser data
+            // reset CurrentUser data
 //            CurrentUser.getInstance().setUserId(null);
 //            CurrentUser.getInstance().setUsername(null);
 
-            // Redirect to LoginActivity
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
 
-            // Show a confirmation message
             Toast.makeText(getActivity(), "Logged Out Successfully", Toast.LENGTH_SHORT).show();
         });
 
